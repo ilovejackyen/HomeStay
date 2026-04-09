@@ -1,0 +1,167 @@
+.admin-page {
+  min-height: calc(100vh - 200px);
+  padding-bottom: 80px;
+}
+
+.admin-header {
+  margin-bottom: 40px;
+}
+
+.admin-dashboard {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  box-shadow: var(--shadow-lg);
+}
+
+.admin-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  position: relative;
+  flex-grow: 1;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+}
+
+.search-box input, .filter-box select {
+  width: 100%;
+  padding: 12px 16px;
+  padding-left: 40px;
+  border: 1px solid var(--light-blue);
+  border-radius: var(--radius-md);
+  font-family: 'Outfit', sans-serif;
+  background: var(--sand);
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.filter-box select {
+  padding-left: 16px;
+}
+
+.search-box input:focus, .filter-box select:focus {
+  border-color: var(--aegean-blue);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-table th {
+  padding: 16px;
+  background-color: var(--light-blue);
+  color: var(--greece-blue);
+  font-weight: 600;
+  border-bottom: 2px solid var(--aegean-blue);
+}
+
+.admin-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--light-blue);
+  vertical-align: middle;
+}
+
+.admin-table tr:hover {
+  background-color: rgba(234, 239, 246, 0.5); /* light-blue low opacity */
+}
+
+.res-id {
+  font-family: monospace;
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.res-guest {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.badge-success {
+  background-color: #E6F4EA;
+  color: #1E8E3E;
+}
+
+.badge-warning {
+  background-color: #FEF7E0;
+  color: #B06000;
+}
+
+.badge-danger {
+  background-color: #FCE8E6;
+  color: #D93025;
+}
+
+.res-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--white);
+}
+
+.approve-btn {
+  background-color: #1E8E3E;
+}
+
+.approve-btn:hover {
+  background-color: #135e29;
+  transform: scale(1.1);
+}
+
+.cancel-btn {
+  background-color: #D93025;
+}
+
+.cancel-btn:hover {
+  background-color: #932019;
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 16px;
+  }
+  .admin-table th, .admin-table td {
+    padding: 12px 8px;
+    font-size: 0.9rem;
+  }
+}

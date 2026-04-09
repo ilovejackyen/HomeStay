@@ -1,0 +1,75 @@
+.footer {
+  background-color: var(--greece-blue);
+  color: var(--light-blue);
+  padding: 60px 0 20px;
+  margin-top: 80px;
+}
+
+.footer .brand {
+  color: var(--white);
+  margin-bottom: 16px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-desc {
+  color: var(--light-blue);
+  line-height: 1.6;
+  max-width: 300px;
+  opacity: 0.8;
+}
+
+.footer h3 {
+  color: var(--sun);
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.footer-contact p {
+  margin-bottom: 12px;
+  opacity: 0.8;
+}
+
+.social-links {
+  display: flex;
+  gap: 16px;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  background: var(--sun);
+  color: var(--greece-blue);
+  transform: translateY(-3px);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
