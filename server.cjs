@@ -33,9 +33,25 @@ app.get('/api/data', async (req, res) => {
   try {
     const doc = await getDoc();
 
-    const roomsSheet = doc.sheetsByTitle['Rooms'];
-    const customersSheet = doc.sheetsByTitle['Customers'];
-    const ordersSheet = doc.sheetsByTitle['Orders'];
+    let roomsSheet = doc.sheetsByTitle['Rooms'];
+    if (!roomsSheet) {
+      roomsSheet = await doc.addSheet({ headerValues: ['ID', 'Name', 'BaseRate'], title: 'Rooms' });
+      await roomsSheet.addRows([
+        { ID: 'R201', Name: '201 無憂海風雙人房', BaseRate: 2500 },
+        { ID: 'R202', Name: '202 愛琴海浪漫四人房', BaseRate: 5500 },
+        { ID: 'R203', Name: '203 蔚藍海景雙人房', BaseRate: 3000 },
+      ]);
+    }
+
+    let customersSheet = doc.sheetsByTitle['Customers'];
+    if (!customersSheet) {
+      customersSheet = await doc.addSheet({ headerValues: ['ID', 'Name', 'Contact', 'CreatedAt'], title: 'Customers' });
+    }
+
+    let ordersSheet = doc.sheetsByTitle['Orders'];
+    if (!ordersSheet) {
+      ordersSheet = await doc.addSheet({ headerValues: ['ID', 'CustomerID', 'RoomID', 'CheckIn', 'CheckOut', 'Guests', 'TotalFee', 'PaymentStatus', 'BookingStatus'], title: 'Orders' });
+    }
 
     let rooms = [];
     if (roomsSheet) {
