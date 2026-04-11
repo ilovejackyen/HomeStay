@@ -11,7 +11,7 @@ export const BookingProvider = ({ children }) => {
   // Load from Excel Database API
   const fetchDatabase = async () => {
     try {
-      const resp = await fetch('http://localhost:3001/api/data');
+      const resp = await fetch('/api/data');
       const data = await resp.json();
       
       setRooms(data.rooms || []);
@@ -47,7 +47,7 @@ export const BookingProvider = ({ children }) => {
 
   const addReservationAsync = async (bookingPayload) => {
     try {
-      const resp = await fetch('http://localhost:3001/api/book', {
+      const resp = await fetch('/api/book', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ export const BookingProvider = ({ children }) => {
     if (props.paymentStatus !== undefined) propUpdates.PaymentStatus = props.paymentStatus;
     
     try {
-      const resp = await fetch('http://localhost:3001/api/update-order', {
+      const resp = await fetch('/api/update-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
