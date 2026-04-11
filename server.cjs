@@ -28,6 +28,25 @@ const getDoc = async () => {
   return doc;
 };
 
+// GET health/test status
+app.get('/api/test', async (req, res) => {
+  try {
+    const doc = await getDoc();
+    res.json({
+      success: true,
+      message: "Successfully connected to Google Sheet!",
+      sheetTitle: doc.title,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to connect to Google Sheets. Check credentials.",
+      error: error.message,
+      stack: error.stack
+    });
+  }
+});
+
 // GET all data
 app.get('/api/data', async (req, res) => {
   try {
