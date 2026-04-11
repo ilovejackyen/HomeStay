@@ -39,6 +39,9 @@ const Footer = () => {
         
         <div className="footer-bottom">
           <p>{t('footer.rights')}</p>
+          <p style={{ marginTop: '10px', fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>
+            v1.1.0 (Google Sheets API)
+          </p>
         </div>
       </div>
     </footer>
