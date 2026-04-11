@@ -168,6 +168,33 @@ app.post('/api/update-order', async (req, res) => {
   }
 });
 
+// POST to verify admin password
+app.post('/api/verify-admin', async (req, res) => {
+  try {
+    const { password } = req.body;
+    const doc = await getDoc();
+    
+    // Auto-initialize Settings sheet if missing
+    let settingsSheet = doc.sheetsByTitle['Settings'];
+    if (!settingsSheet) {
+      settingsSheet = await doc.addSheet({ headerValues: ['Key', 'Value'], title: 'Settings' });
+      await settingsSheet.addRow({ Key: 'AdminPassword', Value: 'admin123' });
+    }
+    
+    const rows = await settingsSheet.getRows();
+    const pwRow = rows.find(r => r.get('Key') === 'AdminPassword');
+    const correctPassword = pwRow ? pwRow.get('Value') : 'admin123';
+    
+    if (password === correctPassword) {
+      res.json({ success: true });
+    } else {
+      res.status(401).json({ success: false, error: 'Incorrect password' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 export default app;
 
 if (process.env.NODE_ENV !== 'production') {

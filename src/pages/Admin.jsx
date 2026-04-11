@@ -14,6 +14,34 @@ const Admin = () => {
   const [filterPayment, setFilterPayment] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
+  const [isAuthenticated, setIsAuthenticated] = useState(sessionStorage.getItem('adminAuth') === 'true');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoggingIn(true);
+    setLoginError('');
+    try {
+      const resp = await fetch('/api/verify-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      const result = await resp.json();
+      if (result.success) {
+        setIsAuthenticated(true);
+        sessionStorage.setItem('adminAuth', 'true');
+      } else {
+        setLoginError(result.error || 'Incorrect password');
+      }
+    } catch (err) {
+      setLoginError('Server error, please try again later');
+    }
+    setIsLoggingIn(false);
+  };
+
   const StatusBadge = ({ status }) => {
     switch(status) {
       case 'confirmed':
@@ -57,6 +85,42 @@ const Admin = () => {
     const matchesSearch = res.guestName.toLowerCase().includes(searchTerm.toLowerCase()) || String(res.id).includes(searchTerm);
     return matchesStatus && matchesPayment && matchesSearch;
   });
+
+  if (!isAuthenticated) {
+    return (
+      <div className="admin-page" style={{ paddingTop: '120px', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <motion.div 
+          className="admin-dashboard glass-panel"
+          style={{ maxWidth: '400px', width: '100%', padding: '40px', textAlign: 'center' }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <Settings size={48} style={{ color: '#0ea5e9', marginBottom: '20px' }} />
+          <h2 style={{ marginBottom: '10px' }}>Admin Login</h2>
+          <p style={{ color: '#94a3b8', marginBottom: '30px' }}>Please enter the management password</p>
+          <form onSubmit={handleLogin}>
+            <input 
+              type="password"
+              placeholder="Password"
+              style={{ width: '100%', padding: '12px 15px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: 'white', marginBottom: '15px', fontSize: '1rem' }}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoggingIn}
+            />
+            {loginError && <p style={{ color: '#ef4444', marginBottom: '15px', fontSize: '0.9rem' }}>{loginError}</p>}
+            <button 
+              type="submit"
+              className="action-btn approve-btn"
+              style={{ width: '100%', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'center', fontWeight: 'bold' }}
+              disabled={isLoggingIn}
+            >
+              {isLoggingIn ? 'Verifying...' : 'Login Securely'}
+            </button>
+          </form>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-page" style={{ paddingTop: '120px' }}>
