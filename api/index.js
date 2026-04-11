@@ -1,9 +1,9 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { JWT } = require('google-auth-library');
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
+import { JWT } from 'google-auth-library';
 
 const app = express();
 app.use(cors());
@@ -93,7 +93,6 @@ app.get('/api/data', async (req, res) => {
     res.json({ rooms, customers, orders });
   } catch (error) {
     console.error('[Error fetching data]', error.message);
-    // If not configured, return empty to not crash the frontend initially
     res.json({ rooms: [], customers: [], orders: [] });
   }
 });
@@ -158,7 +157,6 @@ app.post('/api/update-order', async (req, res) => {
     
     if (!targetRow) return res.status(404).json({ error: "Order not found" });
 
-    // Apply updates
     if (propUpdates.PaymentStatus !== undefined) targetRow.set('PaymentStatus', propUpdates.PaymentStatus);
     if (propUpdates.BookingStatus !== undefined) targetRow.set('BookingStatus', propUpdates.BookingStatus);
     
@@ -170,11 +168,9 @@ app.post('/api/update-order', async (req, res) => {
   }
 });
 
-// Export for Vercel Serverless Functions
-module.exports = app;
+export default app;
 
-// Listen for local execution
-if (require.main === module) {
+if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 3001;
   app.listen(PORT, () => {
     console.log(`[Server] API running at http://localhost:${PORT}`);
