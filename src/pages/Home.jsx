@@ -44,21 +44,21 @@ const Home = () => {
           <RoomCard 
             title={t('rooms_section.room_201')}
             description={t('rooms_section.room_201_desc')}
-            image="/assets/IMG_9612.JPG"
+            image="/assets/IMG_9614.JPG"
             price="$250"
             delay={0.2}
           />
           <RoomCard 
             title={t('rooms_section.room_202')}
             description={t('rooms_section.room_202_desc')}
-            image="/assets/IMG_9616.JPG"
+            image="/assets/IMG_9617.JPG"
             price="$550"
             delay={0.4}
           />
           <RoomCard 
             title={t('rooms_section.room_203')}
             description={t('rooms_section.room_203_desc')}
-            image="/assets/IMG_9615.JPG"
+            image="/assets/IMG_9618.JPG"
             price="$300"
             delay={0.6}
           />
