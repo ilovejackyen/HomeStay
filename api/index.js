@@ -1,4 +1,12 @@
-import 'dotenv/config';
+import { config } from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// Load .env from project root regardless of which directory node is launched from
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+config({ path: join(__dirname, '../.env') });
+
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -64,12 +72,12 @@ app.get('/api/data', async (req, res) => {
 
     let customersSheet = doc.sheetsByTitle['Customers'];
     if (!customersSheet) {
-      customersSheet = await doc.addSheet({ headerValues: ['ID', 'Name', 'Contact', 'CreatedAt'], title: 'Customers' });
+      customersSheet = await doc.addSheet({ headerValues: ['ID', 'Name', 'Phone', 'LineID', 'Email', 'SpecialRequests', 'CreatedAt'], title: 'Customers' });
     }
 
     let ordersSheet = doc.sheetsByTitle['Orders'];
     if (!ordersSheet) {
-      ordersSheet = await doc.addSheet({ headerValues: ['ID', 'CustomerID', 'RoomID', 'CheckIn', 'CheckOut', 'Guests', 'TotalFee', 'PaymentStatus', 'BookingStatus'], title: 'Orders' });
+      ordersSheet = await doc.addSheet({ headerValues: ['ID', 'CustomerID', 'RoomID', 'CheckIn', 'CheckOut', 'Guests', 'TotalFee', 'PaymentStatus', 'BookingStatus', 'Phone', 'LineID', 'Email', 'SpecialRequests'], title: 'Orders' });
     }
 
     let rooms = [];
@@ -100,40 +108,55 @@ app.get('/api/data', async (req, res) => {
 // POST to create a booking
 app.post('/api/book', async (req, res) => {
   try {
-    const { guestName, contact, roomId, checkIn, checkOut, guests, totalFee } = req.body;
+    const { guestName, phone, lineId, email, specialRequests, roomId, checkIn, checkOut, guests, totalFee } = req.body;
     const doc = await getDoc();
     
     // Process Customer
     let customersSheet = doc.sheetsByTitle['Customers'];
-    if (!customersSheet) customersSheet = await doc.addSheet({ headerValues: ['ID', 'Name', 'Contact', 'CreatedAt'], title: 'Customers' });
+    if (!customersSheet) customersSheet = await doc.addSheet({ headerValues: ['ID', 'Name', 'Phone', 'LineID', 'Email', 'SpecialRequests', 'CreatedAt'], title: 'Customers' });
     
     const customerRows = await customersSheet.getRows();
-    let customer = customerRows.map(r => r.toObject()).find(c => c.Name === guestName);
+    let existingCustomerRow = customerRows.find(r => r.get('Name') === guestName);
+    let customer;
     
-    if (!customer) {
+    if (!existingCustomerRow) {
       customer = {
         ID: `C-${Date.now()}`,
         Name: guestName,
-        Contact: contact || '',
+        Phone: phone || '',
+        LineID: lineId || '',
+        Email: email || '',
+        SpecialRequests: specialRequests || '',
         CreatedAt: new Date().toISOString()
       };
       await customersSheet.addRow(customer);
+    } else {
+      // Update contact info for returning customer
+      if (phone) existingCustomerRow.set('Phone', phone);
+      if (lineId) existingCustomerRow.set('LineID', lineId);
+      if (email) existingCustomerRow.set('Email', email);
+      await existingCustomerRow.save();
+      customer = existingCustomerRow.toObject();
     }
 
     // Process Order
     let ordersSheet = doc.sheetsByTitle['Orders'];
-    if (!ordersSheet) ordersSheet = await doc.addSheet({ headerValues: ['ID', 'CustomerID', 'RoomID', 'CheckIn', 'CheckOut', 'Guests', 'TotalFee', 'PaymentStatus', 'BookingStatus'], title: 'Orders' });
+    if (!ordersSheet) ordersSheet = await doc.addSheet({ headerValues: ['ID', 'CustomerID', 'RoomID', 'CheckIn', 'CheckOut', 'Guests', 'TotalFee', 'PaymentStatus', 'BookingStatus', 'Phone', 'LineID', 'Email', 'SpecialRequests'], title: 'Orders' });
     
     const order = {
       ID: `ORD-${Math.floor(1000 + Math.random() * 9000)}-${Date.now().toString().slice(-4)}`,
-      CustomerID: customer.ID,
+      CustomerID: customer.ID || customer.id || '',
       RoomID: roomId,
       CheckIn: checkIn,
       CheckOut: checkOut,
       Guests: guests,
       TotalFee: totalFee,
       PaymentStatus: 'unpaid',
-      BookingStatus: 'pending'
+      BookingStatus: 'pending',
+      Phone: phone || '',
+      LineID: lineId || '',
+      Email: email || '',
+      SpecialRequests: specialRequests || ''
     };
     await ordersSheet.addRow(order);
 

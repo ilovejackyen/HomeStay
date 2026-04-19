@@ -18,17 +18,25 @@ export const BookingProvider = ({ children }) => {
       setCustomers(data.customers || []);
       
       // Parse dates internally for the frontend component requirements
-      const parsedReservations = (data.orders || []).map(r => ({
-        id: r.ID,
-        guestName: data.customers.find(c => c.ID === r.CustomerID)?.Name || '',
-        roomId: r.RoomID,
-        checkIn: new Date(r.CheckIn).getTime(),
-        checkOut: new Date(r.CheckOut).getTime(),
-        guests: r.Guests,
-        totalFee: r.TotalFee,
-        paymentStatus: r.PaymentStatus,
-        status: r.BookingStatus
-      }));
+      const parsedReservations = (data.orders || []).map(r => {
+        const customer = (data.customers || []).find(c => c.ID === r.CustomerID);
+        return {
+          id: r.ID,
+          guestName: customer?.Name || r.GuestName || '',
+          roomId: r.RoomID,
+          checkIn: new Date(r.CheckIn).getTime(),
+          checkOut: new Date(r.CheckOut).getTime(),
+          guests: r.Guests,
+          totalFee: r.TotalFee,
+          paymentStatus: r.PaymentStatus,
+          status: r.BookingStatus,
+          // Contact info stored directly on order for quick access
+          phone: r.Phone || customer?.Phone || '',
+          lineId: r.LineID || customer?.LineID || '',
+          email: r.Email || customer?.Email || '',
+          specialRequests: r.SpecialRequests || customer?.SpecialRequests || '',
+        };
+      });
       
       setReservations(parsedReservations.reverse());
     } catch (error) {

@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Sensitive / Credentials – DO NOT commit
+.env
+*.json
+!package.json
+!package-lock.json

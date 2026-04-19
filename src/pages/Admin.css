@@ -4,9 +4,48 @@
 }
 
 .admin-header {
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
+/* ===== Stats Row ===== */
+.admin-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1.5px solid var(--light-blue);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover { transform: translateY(-2px); }
+
+.stat-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--greece-blue);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 0.88rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.stat-card.pending .stat-num { color: #b06000; }
+.stat-card.confirmed .stat-num { color: #1e8e3e; }
+.stat-card.unpaid .stat-num { color: #d93025; }
+
+/* ===== Dashboard Panel ===== */
 .admin-dashboard {
   background: var(--white);
   border-radius: var(--radius-lg);
@@ -46,6 +85,7 @@
   background: var(--sand);
   outline: none;
   transition: border-color 0.3s;
+  color: var(--text-dark);
 }
 
 .filter-box select {
@@ -56,6 +96,7 @@
   border-color: var(--aegean-blue);
 }
 
+/* ===== Table ===== */
 .table-responsive {
   overflow-x: auto;
 }
@@ -67,27 +108,110 @@
 }
 
 .admin-table th {
-  padding: 16px;
+  padding: 14px 16px;
   background-color: var(--light-blue);
   color: var(--greece-blue);
   font-weight: 600;
   border-bottom: 2px solid var(--aegean-blue);
+  white-space: nowrap;
+  font-size: 0.9rem;
 }
 
 .admin-table td {
-  padding: 16px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--light-blue);
   vertical-align: middle;
+  font-size: 0.92rem;
 }
 
 .admin-table tr:hover {
-  background-color: rgba(234, 239, 246, 0.5); /* light-blue low opacity */
+  background-color: rgba(234, 239, 246, 0.5);
 }
 
+.admin-table tr.expanded-row > td {
+  background: #f0f7ff;
+}
+
+/* ===== Contact Cell ===== */
+.contact-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  white-space: nowrap;
+}
+
+.email-item {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+/* ===== Detail Panel ===== */
+.detail-row td {
+  background: #f8fbff;
+  border-bottom: 2px solid var(--aegean-blue);
+}
+
+.detail-panel {
+  overflow: hidden;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) 1fr;
+  gap: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #f0f7ff, #e8f4fd);
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.detail-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--greece-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  padding: 8px 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #dde8f0;
+}
+
+.requests-text {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  min-height: 40px;
+}
+
+/* ===== Badges ===== */
 .res-id {
   font-family: monospace;
   color: var(--text-light);
-  font-size: 0.95rem;
+  font-size: 0.88rem;
 }
 
 .res-guest {
@@ -98,62 +222,62 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: 5px;
+  padding: 5px 10px;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 500;
+  white-space: nowrap;
 }
 
-.badge-success {
-  background-color: #E6F4EA;
-  color: #1E8E3E;
-}
+.badge-success { background-color: #E6F4EA; color: #1E8E3E; }
+.badge-warning { background-color: #FEF7E0; color: #B06000; }
+.badge-danger  { background-color: #FCE8E6; color: #D93025; }
 
-.badge-warning {
-  background-color: #FEF7E0;
-  color: #B06000;
-}
-
-.badge-danger {
-  background-color: #FCE8E6;
-  color: #D93025;
-}
-
+/* ===== Action Buttons ===== */
 .res-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  flex-wrap: nowrap;
 }
 
 .action-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s;
   color: var(--white);
+  flex-shrink: 0;
 }
 
-.approve-btn {
-  background-color: #1E8E3E;
+.approve-btn { background-color: #1E8E3E; }
+.approve-btn:hover { background-color: #135e29; transform: scale(1.1); }
+
+.cancel-btn { background-color: #D93025; }
+.cancel-btn:hover { background-color: #932019; transform: scale(1.1); }
+
+.detail-btn { background-color: var(--aegean-blue); }
+.detail-btn:hover { background-color: var(--greece-blue); transform: scale(1.1); }
+
+/* ===== Loading ===== */
+.loading-dots {
+  color: var(--text-light);
+  font-style: italic;
 }
 
-.approve-btn:hover {
-  background-color: #135e29;
-  transform: scale(1.1);
-}
-
-.cancel-btn {
-  background-color: #D93025;
-}
-
-.cancel-btn:hover {
-  background-color: #932019;
-  transform: scale(1.1);
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .admin-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .detail-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -161,7 +285,16 @@
     padding: 16px;
   }
   .admin-table th, .admin-table td {
-    padding: 12px 8px;
-    font-size: 0.9rem;
+    padding: 10px 8px;
+    font-size: 0.85rem;
   }
+  .admin-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .stat-num { font-size: 1.5rem; }
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .contact-cell { display: none; } /* hidden on very small; shown in detail drawer */
 }
