@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Check, X, Clock, Settings, Search, DollarSign,
   Phone, Mail, MessageSquare, ChevronDown, ChevronUp, User, FileText,
-  LayoutList, CalendarRange
+  LayoutList, CalendarRange, Database, ExternalLink, Zap
 } from 'lucide-react';
 import { BookingContext } from '../context/BookingContext';
 import AdminCalendar from '../components/AdminCalendar';
@@ -24,6 +24,8 @@ const Admin = () => {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [testResult, setTestResult] = useState({ type: '', message: '' });
+  const [isTesting, setIsTesting] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -46,6 +48,26 @@ const Admin = () => {
       setLoginError(t('admin.server_error'));
     }
     setIsLoggingIn(false);
+  };
+
+  const handleTestConnection = async () => {
+    setIsTesting(true);
+    setTestResult({ type: '', message: '' });
+    try {
+      const resp = await fetch('/api/test');
+      const data = await resp.json();
+      if (data.success) {
+        setTestResult({ type: 'success', message: t('admin.test_success') });
+        if (data.url) window.sessionStorage.setItem('dbUrl', data.url);
+      } else {
+        setTestResult({ type: 'error', message: t('admin.test_fail') + (data.error || '') });
+      }
+    } catch (err) {
+      setTestResult({ type: 'error', message: t('admin.test_fail') + err.message });
+    }
+    setIsTesting(false);
+    // Clear message after 5 seconds
+    setTimeout(() => setTestResult({ type: '', message: '' }), 5000);
   };
 
   const StatusBadge = ({ status }) => {
@@ -149,6 +171,49 @@ const Admin = () => {
         <motion.div className="admin-header center" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="section-title"><Settings size={32} style={{ marginRight: '12px' }} />{t('admin.title')}</h1>
           <p className="section-subtitle">{t('admin.subtitle')}</p>
+          
+          <div className="admin-db-tools" style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginTop: '20px', flexWrap: 'wrap' }}>
+            <button 
+              className="action-btn" 
+              onClick={handleTestConnection} 
+              disabled={isTesting}
+              style={{ width: 'auto', padding: '0 15px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', display: 'flex', gap: '8px', fontSize: '0.9rem', height: '36px', border: '1px solid rgba(255,255,255,0.1)' }}
+            >
+              <Zap size={16} className={isTesting ? 'animate-pulse' : ''} style={{ color: isTesting ? '#f59e0b' : '#38bdf8' }} />
+              {t('admin.test_connection')}
+            </button>
+            
+            <a 
+              href={window.sessionStorage.getItem('dbUrl') || "#"} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="action-btn" 
+              style={{ width: 'auto', padding: '0 15px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', display: 'flex', gap: '8px', fontSize: '0.9rem', height: '36px', textDecoration: 'none', color: 'white', border: '1px solid rgba(255,255,255,0.1)' }}
+              onClick={(e) => {
+                if (!window.sessionStorage.getItem('dbUrl')) {
+                  e.preventDefault();
+                  handleTestConnection();
+                }
+              }}
+            >
+              <Database size={16} style={{ color: '#0ea5e9' }} />
+              {t('admin.open_database')}
+              <ExternalLink size={14} style={{ opacity: 0.6 }} />
+            </a>
+          </div>
+
+          <AnimatePresence>
+            {testResult.message && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                exit={{ opacity: 0, scale: 0.9 }}
+                style={{ marginTop: '10px', fontSize: '0.85rem', color: testResult.type === 'success' ? '#10b981' : '#ef4444' }}
+              >
+                {testResult.message}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
 
         {/* Stats Row */}
