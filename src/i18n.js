@@ -121,7 +121,12 @@ const resources = {
         prev_period: "Prev 14 Days",
         next_period: "Next 14 Days",
         today: "Today",
-        calendar_title: "Reservation Schedule"
+        calendar_title: "Reservation Schedule",
+        database_tools: "Database Tools",
+        test_connection: "Test Connection",
+        open_database: "Open Database",
+        test_success: "Database connection successful!",
+        test_fail: "Database connection failed: "
       },
       footer: {
         services_title: "Our Services",
@@ -252,7 +257,12 @@ const resources = {
         prev_period: "前 14 天",
         next_period: "後 14 天",
         today: "回到今天",
-        calendar_title: "預約排程表"
+        calendar_title: "預約排程表",
+        database_tools: "資料庫工具",
+        test_connection: "測試連線狀態",
+        open_database: "開啟資料庫",
+        test_success: "資料庫連線成功！",
+        test_fail: "資料庫連線失敗："
       },
       footer: {
         services_title: "服務項目",

@@ -68,6 +68,7 @@ app.get('/api/test', async (req, res) => {
       success: true,
       message: "Successfully connected to Database!",
       sheetTitle: doc.title,
+      url: `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/edit`
     });
   } catch (error) {
     res.status(500).json({
