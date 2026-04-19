@@ -16,28 +16,28 @@ const Hero = () => {
         {/* We use the requested image from the local pics folder */}
         <img src="/assets/IMG_9624.JPG" alt="Island Arch Homestay" className="hero-image" />
       </div>
-      
+
       <div className="container hero-content">
-        <motion.div 
+        <motion.div
           className="hero-text"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
         >
-          <motion.div 
+          <motion.div
             className="hero-badge"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.5 }}
           >
             <Compass size={16} />
-            <span>Santorini, Greece</span>
+            <span>Penghu, Taiwan</span>
           </motion.div>
-          
+
           <h1 className="hero-title">{t('hero.title')}</h1>
           <p className="hero-subtitle">{t('hero.subtitle')}</p>
-          
-          <motion.button 
+
+          <motion.button
             className="btn btn-primary hero-btn"
             onClick={() => navigate('/booking')}
             whileHover={{ scale: 1.05 }}
