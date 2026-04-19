@@ -148,6 +148,19 @@ const Booking = () => {
 
   const estimatedFee = selectedRoom ? (selectedRoom.BaseRate || selectedRoom.baseRate || 0) * days : 0;
 
+  const handleCheckInChange = (date) => {
+    setStartDate(date);
+    setHasSearched(false);
+    
+    // If check-out is not after check-in, auto-advance it to check-in + 1 day
+    const nextDay = new Date(date);
+    nextDay.setDate(nextDay.getDate() + 1);
+    
+    if (endDate <= date) {
+      setEndDate(nextDay);
+    }
+  };
+
   // Room type key mapping for i18n image/desc
   const roomKeys = { R201: '201', R202: '202', R203: '203' };
 
@@ -193,7 +206,7 @@ const Booking = () => {
                     <label><CalendarIcon size={18} /> {t('booking.check_in')}</label>
                     <DatePicker
                       selected={startDate}
-                      onChange={(date) => { setStartDate(date); setHasSearched(false); }}
+                      onChange={handleCheckInChange}
                       selectsStart startDate={startDate} endDate={endDate}
                       minDate={new Date()} className="date-input" dateFormat="yyyy/MM/dd"
                     />
@@ -204,7 +217,7 @@ const Booking = () => {
                       selected={endDate}
                       onChange={(date) => { setEndDate(date); setHasSearched(false); }}
                       selectsEnd startDate={startDate} endDate={endDate}
-                      minDate={startDate} className="date-input" dateFormat="yyyy/MM/dd"
+                      minDate={new Date(new Date(startDate).getTime() + 86400000)} className="date-input" dateFormat="yyyy/MM/dd"
                     />
                   </div>
                   <div className="form-group">
