@@ -36,6 +36,27 @@ const getDoc = async () => {
   return doc;
 };
 
+// Helper to ensure sheet exists and has correct headers
+const ensureSheet = async (doc, title, headerValues) => {
+  let sheet = doc.sheetsByTitle[title];
+  if (!sheet) {
+    sheet = await doc.addSheet({ headerValues, title });
+  } else {
+    // If sheet exists, check if headers need update
+    await sheet.loadHeaderRow();
+    const existingHeaders = sheet.headerValues;
+    const missingHeaders = headerValues.filter(h => !existingHeaders.includes(h));
+    
+    if (missingHeaders.length > 0) {
+      console.log(`[Server] Updating headers for ${title}: adding ${missingHeaders.join(', ')}`);
+      // Warning: setHeaderRow overwrites existing headers. 
+      // We append missing ones to the end to be safe.
+      await sheet.setHeaderRow([...existingHeaders, ...missingHeaders]);
+    }
+  }
+  return sheet;
+};
+
 // GET health/test status
 app.get('/api/test', async (req, res) => {
   try {
@@ -60,9 +81,13 @@ app.get('/api/data', async (req, res) => {
   try {
     const doc = await getDoc();
 
-    let roomsSheet = doc.sheetsByTitle['Rooms'];
-    if (!roomsSheet) {
-      roomsSheet = await doc.addSheet({ headerValues: ['ID', 'Name', 'BaseRate'], title: 'Rooms' });
+    const roomsSheet = await ensureSheet(doc, 'Rooms', ['ID', 'Name', 'BaseRate']);
+    const customersSheet = await ensureSheet(doc, 'Customers', ['ID', 'Name', 'Phone', 'LineID', 'Email', 'SpecialRequests', 'CreatedAt']);
+    const ordersSheet = await ensureSheet(doc, 'Orders', ['ID', 'CustomerID', 'RoomID', 'CheckIn', 'CheckOut', 'Guests', 'TotalFee', 'PaymentStatus', 'BookingStatus', 'Phone', 'LineID', 'Email', 'SpecialRequests']);
+    
+    // Auto-seed rooms if empty
+    const roomRows = await roomsSheet.getRows();
+    if (roomRows.length === 0) {
       await roomsSheet.addRows([
         { ID: 'R201', Name: '201 無憂海風雙人房', BaseRate: 2500 },
         { ID: 'R202', Name: '202 愛琴海浪漫四人房', BaseRate: 5500 },
@@ -70,33 +95,14 @@ app.get('/api/data', async (req, res) => {
       ]);
     }
 
-    let customersSheet = doc.sheetsByTitle['Customers'];
-    if (!customersSheet) {
-      customersSheet = await doc.addSheet({ headerValues: ['ID', 'Name', 'Phone', 'LineID', 'Email', 'SpecialRequests', 'CreatedAt'], title: 'Customers' });
-    }
+    const rowsR = await roomsSheet.getRows();
+    const rooms = rowsR.map(row => row.toObject());
 
-    let ordersSheet = doc.sheetsByTitle['Orders'];
-    if (!ordersSheet) {
-      ordersSheet = await doc.addSheet({ headerValues: ['ID', 'CustomerID', 'RoomID', 'CheckIn', 'CheckOut', 'Guests', 'TotalFee', 'PaymentStatus', 'BookingStatus', 'Phone', 'LineID', 'Email', 'SpecialRequests'], title: 'Orders' });
-    }
+    const rowsC = await customersSheet.getRows();
+    const customers = rowsC.map(row => row.toObject());
 
-    let rooms = [];
-    if (roomsSheet) {
-      const rows = await roomsSheet.getRows();
-      rooms = rows.map(row => row.toObject());
-    }
-
-    let customers = [];
-    if (customersSheet) {
-      const rows = await customersSheet.getRows();
-      customers = rows.map(row => row.toObject());
-    }
-
-    let orders = [];
-    if (ordersSheet) {
-      const rows = await ordersSheet.getRows();
-      orders = rows.map(row => row.toObject());
-    }
+    const rowsO = await ordersSheet.getRows();
+    const orders = rowsO.map(row => row.toObject());
 
     res.json({ rooms, customers, orders });
   } catch (error) {
@@ -112,11 +118,10 @@ app.post('/api/book', async (req, res) => {
     const doc = await getDoc();
     
     // Process Customer
-    let customersSheet = doc.sheetsByTitle['Customers'];
-    if (!customersSheet) customersSheet = await doc.addSheet({ headerValues: ['ID', 'Name', 'Phone', 'LineID', 'Email', 'SpecialRequests', 'CreatedAt'], title: 'Customers' });
+    const customersSheet = await ensureSheet(doc, 'Customers', ['ID', 'Name', 'Phone', 'LineID', 'Email', 'SpecialRequests', 'CreatedAt']);
     
     const customerRows = await customersSheet.getRows();
-    let existingCustomerRow = customerRows.find(r => r.get('Name') === guestName);
+    let existingCustomerRow = customerRows.find(r => r.get('Name')?.trim() === guestName?.trim());
     let customer;
     
     if (!existingCustomerRow) {
@@ -135,13 +140,13 @@ app.post('/api/book', async (req, res) => {
       if (phone) existingCustomerRow.set('Phone', phone);
       if (lineId) existingCustomerRow.set('LineID', lineId);
       if (email) existingCustomerRow.set('Email', email);
+      if (specialRequests) existingCustomerRow.set('SpecialRequests', specialRequests);
       await existingCustomerRow.save();
       customer = existingCustomerRow.toObject();
     }
 
     // Process Order
-    let ordersSheet = doc.sheetsByTitle['Orders'];
-    if (!ordersSheet) ordersSheet = await doc.addSheet({ headerValues: ['ID', 'CustomerID', 'RoomID', 'CheckIn', 'CheckOut', 'Guests', 'TotalFee', 'PaymentStatus', 'BookingStatus', 'Phone', 'LineID', 'Email', 'SpecialRequests'], title: 'Orders' });
+    const ordersSheet = await ensureSheet(doc, 'Orders', ['ID', 'CustomerID', 'RoomID', 'CheckIn', 'CheckOut', 'Guests', 'TotalFee', 'PaymentStatus', 'BookingStatus', 'Phone', 'LineID', 'Email', 'SpecialRequests']);
     
     const order = {
       ID: `ORD-${Math.floor(1000 + Math.random() * 9000)}-${Date.now().toString().slice(-4)}`,

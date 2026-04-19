@@ -75,13 +75,11 @@ const Admin = () => {
 
   // Get full customer info for a reservation
   const getCustomerInfo = (res) => {
-    // Try to find in customers array (raw data from backend)
-    const customer = customers?.find(c => c.Name === res.guestName);
     return {
-      phone: res.phone || customer?.Phone || '',
-      lineId: res.lineId || customer?.LineID || '',
-      email: res.email || customer?.Email || '',
-      specialRequests: res.specialRequests || customer?.SpecialRequests || '',
+      phone: res.phone || '',
+      lineId: res.lineId || '',
+      email: res.email || '',
+      specialRequests: res.specialRequests || '',
     };
   };
 

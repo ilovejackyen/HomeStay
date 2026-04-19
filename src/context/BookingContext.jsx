@@ -19,10 +19,12 @@ export const BookingProvider = ({ children }) => {
       
       // Parse dates internally for the frontend component requirements
       const parsedReservations = (data.orders || []).map(r => {
-        const customer = (data.customers || []).find(c => c.ID === r.CustomerID);
+        // Find matching customer by ID or search by Name as fallback
+        const customer = (data.customers || []).find(c => c.ID === r.CustomerID || c.Name === r.GuestName);
+        
         return {
           id: r.ID,
-          guestName: customer?.Name || r.GuestName || '',
+          guestName: customer?.Name || r.GuestName || 'Unknown Guest',
           roomId: r.RoomID,
           checkIn: new Date(r.CheckIn).getTime(),
           checkOut: new Date(r.CheckOut).getTime(),
@@ -30,7 +32,7 @@ export const BookingProvider = ({ children }) => {
           totalFee: r.TotalFee,
           paymentStatus: r.PaymentStatus,
           status: r.BookingStatus,
-          // Contact info stored directly on order for quick access
+          // Use order-specific contact info first, fallback to customer profile
           phone: r.Phone || customer?.Phone || '',
           lineId: r.LineID || customer?.LineID || '',
           email: r.Email || customer?.Email || '',
