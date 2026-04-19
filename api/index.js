@@ -22,7 +22,7 @@ const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
 
 const getDoc = async () => {
   if (!SPREADSHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
-    throw new Error("Google Sheets credentials or Spreadsheet ID are missing in environment variables.");
+    throw new Error("Database credentials or ID are missing in environment variables.");
   }
 
   const jwt = new JWT({
@@ -42,13 +42,13 @@ app.get('/api/test', async (req, res) => {
     const doc = await getDoc();
     res.json({
       success: true,
-      message: "Successfully connected to Google Sheet!",
+      message: "Successfully connected to Database!",
       sheetTitle: doc.title,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Failed to connect to Google Sheets. Check credentials.",
+      message: "Failed to connect to Database. Check credentials.",
       error: error.message,
       stack: error.stack
     });
@@ -224,6 +224,6 @@ if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 3001;
   app.listen(PORT, () => {
     console.log(`[Server] API running at http://localhost:${PORT}`);
-    console.log(`[Server] Waiting for Google Sheets configuration in .env`);
+    console.log(`[Server] Waiting for database configuration in .env`);
   });
 }

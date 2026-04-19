@@ -113,7 +113,7 @@ const resources = {
         unpaid: "Unpaid",
         nights: "nights",
         pax: "guests",
-        loading: "Loading from Google Sheets...",
+        loading: "Loading database...",
         no_reservations: "No reservations found.",
         no_requests: "No special requests"
       },
@@ -238,7 +238,7 @@ const resources = {
         unpaid: "待付款",
         nights: "晚",
         pax: "位",
-        loading: "正在載入 Google Sheets 資料...",
+        loading: "正在載入資料庫...",
         no_reservations: "目前沒有符合條件的預約。",
         no_requests: "無特殊需求備註"
       },
