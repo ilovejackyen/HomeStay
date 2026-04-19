@@ -40,7 +40,7 @@ const Footer = () => {
         <div className="footer-bottom">
           <p>{t('footer.rights')}</p>
           <p style={{ marginTop: '10px', fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>
-            v1.2.1
+            v1.3.0
           </p>
         </div>
       </div>

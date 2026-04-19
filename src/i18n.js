@@ -115,7 +115,13 @@ const resources = {
         pax: "guests",
         loading: "Loading database...",
         no_reservations: "No reservations found.",
-        no_requests: "No special requests"
+        no_requests: "No special requests",
+        view_calendar: "Calendar View",
+        view_table: "Table View",
+        prev_period: "Prev 14 Days",
+        next_period: "Next 14 Days",
+        today: "Today",
+        calendar_title: "Reservation Schedule"
       },
       footer: {
         services_title: "Our Services",
@@ -240,7 +246,13 @@ const resources = {
         pax: "位",
         loading: "正在載入資料庫...",
         no_reservations: "目前沒有符合條件的預約。",
-        no_requests: "無特殊需求備註"
+        no_requests: "無特殊需求備註",
+        view_calendar: "預約歷模式",
+        view_table: "表格模式",
+        prev_period: "前 14 天",
+        next_period: "後 14 天",
+        today: "回到今天",
+        calendar_title: "預約排程表"
       },
       footer: {
         services_title: "服務項目",
