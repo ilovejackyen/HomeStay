@@ -6,6 +6,7 @@ import {
   Phone, Mail, MessageSquare, ChevronDown, ChevronUp, User, FileText
 } from 'lucide-react';
 import { BookingContext } from '../context/BookingContext';
+import AdminCalendar from '../components/AdminCalendar';
 import './Admin.css';
 
 const Admin = () => {
@@ -16,6 +17,7 @@ const Admin = () => {
   const [filterPayment, setFilterPayment] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedRow, setExpandedRow] = useState(null);
+  const [viewMode, setViewMode] = useState('table'); // 'table' or 'calendar'
 
   const [isAuthenticated, setIsAuthenticated] = useState(sessionStorage.getItem('adminAuth') === 'true');
   const [password, setPassword] = useState('');
@@ -180,6 +182,24 @@ const Admin = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
+
+            <div className="view-toggle" style={{ display: 'flex', gap: '5px', backgroundColor: 'rgba(255,255,255,0.05)', padding: '4px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <button 
+                onClick={() => setViewMode('table')} 
+                className={`action-btn ${viewMode === 'table' ? 'active' : ''}`}
+                style={{ backgroundColor: viewMode === 'table' ? '#0ea5e9' : 'transparent', borderRadius: '6px', padding: '6px 12px', fontSize: '0.85rem' }}
+              >
+                {t('admin.view_table')}
+              </button>
+              <button 
+                onClick={() => setViewMode('calendar')} 
+                className={`action-btn ${viewMode === 'calendar' ? 'active' : ''}`}
+                style={{ backgroundColor: viewMode === 'calendar' ? '#0ea5e9' : 'transparent', borderRadius: '6px', padding: '6px 12px', fontSize: '0.85rem' }}
+              >
+                {t('admin.view_calendar')}
+              </button>
+            </div>
+
             <div className="filter-box">
               <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                 <option value="all">{t('admin.filter_all_status')}</option>
@@ -197,7 +217,8 @@ const Admin = () => {
             </div>
           </div>
 
-          {/* Table */}
+          {/* Table or Calendar View */}
+          {viewMode === 'table' ? (
           <div className="table-responsive">
             <table className="admin-table">
               <thead>
@@ -334,6 +355,9 @@ const Admin = () => {
               </tbody>
             </table>
           </div>
+          ) : (
+            <AdminCalendar rooms={rooms} reservations={reservations} />
+          )}
         </motion.div>
       </div>
     </div>
