@@ -115,15 +115,11 @@ app.get('/api/data', async (req, res) => {
     const rowsO = await ordersSheet.getRows();
     const orders = rowsO.map(row => row.toObject());
 
-<<<<<<< HEAD
-    res.json({ rooms, customers, orders });
-=======
     const responseData = { rooms, customers, orders };
     dataCache = responseData;
     lastFetchTime = now;
     
     res.json(responseData);
->>>>>>> development
   } catch (error) {
     console.error('[Error fetching data]', error.message);
     res.json({ rooms: [], customers: [], orders: [] });
