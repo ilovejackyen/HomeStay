@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Check, X, Clock, Settings, Search, DollarSign,
-  Phone, Mail, MessageSquare, ChevronDown, ChevronUp, User, FileText
+  Phone, Mail, MessageSquare, ChevronDown, ChevronUp, User, FileText,
+  LayoutList, CalendarRange
 } from 'lucide-react';
 import { BookingContext } from '../context/BookingContext';
 import AdminCalendar from '../components/AdminCalendar';
@@ -185,20 +186,22 @@ const Admin = () => {
               />
             </div>
 
-            <div className="view-toggle" style={{ display: 'flex', gap: '5px', backgroundColor: 'rgba(255,255,255,0.05)', padding: '4px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <div className="view-toggle-container">
               <button 
                 onClick={() => setViewMode('table')} 
-                className={`action-btn ${viewMode === 'table' ? 'active' : ''}`}
-                style={{ backgroundColor: viewMode === 'table' ? '#0ea5e9' : 'transparent', borderRadius: '6px', padding: '6px 12px', fontSize: '0.85rem' }}
+                className={`view-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
+                title={t('admin.view_table')}
               >
-                {t('admin.view_table')}
+                <LayoutList size={18} />
+                <span>{t('admin.view_table')}</span>
               </button>
               <button 
                 onClick={() => setViewMode('calendar')} 
-                className={`action-btn ${viewMode === 'calendar' ? 'active' : ''}`}
-                style={{ backgroundColor: viewMode === 'calendar' ? '#0ea5e9' : 'transparent', borderRadius: '6px', padding: '6px 12px', fontSize: '0.85rem' }}
+                className={`view-toggle-btn ${viewMode === 'calendar' ? 'active' : ''}`}
+                title={t('admin.view_calendar')}
               >
-                {t('admin.view_calendar')}
+                <CalendarRange size={18} />
+                <span>{t('admin.view_calendar')}</span>
               </button>
             </div>
 
