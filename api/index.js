@@ -49,13 +49,16 @@ const ensureSheet = async (doc, title, headerValues) => {
     
     if (missingHeaders.length > 0) {
       console.log(`[Server] Updating headers for ${title}: adding ${missingHeaders.join(', ')}`);
-      // Warning: setHeaderRow overwrites existing headers. 
-      // We append missing ones to the end to be safe.
       await sheet.setHeaderRow([...existingHeaders, ...missingHeaders]);
     }
   }
   return sheet;
 };
+
+// Simple In-Memory Cache for /api/data
+let dataCache = null;
+let lastFetchTime = 0;
+const CACHE_DURATION = 15000; // 15 seconds
 
 // GET health/test status
 app.get('/api/test', async (req, res) => {
@@ -78,6 +81,13 @@ app.get('/api/test', async (req, res) => {
 
 // GET all data
 app.get('/api/data', async (req, res) => {
+  const now = Date.now();
+  
+  if (dataCache && (now - lastFetchTime < CACHE_DURATION)) {
+    console.log('[Server] Serving data from cache');
+    return res.json(dataCache);
+  }
+
   try {
     const doc = await getDoc();
 
@@ -104,7 +114,15 @@ app.get('/api/data', async (req, res) => {
     const rowsO = await ordersSheet.getRows();
     const orders = rowsO.map(row => row.toObject());
 
+<<<<<<< HEAD
     res.json({ rooms, customers, orders });
+=======
+    const responseData = { rooms, customers, orders };
+    dataCache = responseData;
+    lastFetchTime = now;
+    
+    res.json(responseData);
+>>>>>>> development
   } catch (error) {
     console.error('[Error fetching data]', error.message);
     res.json({ rooms: [], customers: [], orders: [] });

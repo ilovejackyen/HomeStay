@@ -56,9 +56,59 @@
 .admin-controls {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 24px;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+/* ===== View Toggle (Segmented Control) ===== */
+.view-toggle-container {
+  display: flex;
+  background: rgba(14, 165, 233, 0.08);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(14, 165, 233, 0.15);
+  gap: 4px;
+}
+
+.view-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.view-toggle-btn:hover {
+  background: rgba(14, 165, 233, 0.05);
+  color: var(--aegean-blue);
+}
+
+.view-toggle-btn.active {
+  background: var(--aegean-blue);
+  color: white;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.view-toggle-btn span {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .view-toggle-btn span {
+    display: none; /* Icon only on mobile */
+  }
+  .view-toggle-btn {
+    padding: 8px 12px;
+  }
 }
 
 .search-box {

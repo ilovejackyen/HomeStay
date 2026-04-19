@@ -50,8 +50,8 @@ export const BookingProvider = ({ children }) => {
 
   useEffect(() => {
     fetchDatabase();
-    // Setting up polling for live updates from Excel (every 5 seconds)
-    const intervalId = setInterval(fetchDatabase, 5000);
+    // Setting up polling for live updates from Excel (every 30 seconds to save quota)
+    const intervalId = setInterval(fetchDatabase, 30000);
     return () => clearInterval(intervalId);
   }, []);
 
